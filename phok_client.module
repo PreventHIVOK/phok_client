@@ -295,7 +295,7 @@ function _phok_client_installed_fields() {
       'field_name'  => 'client_positive_status_date',
       'cardinality' => 1,
       'type'        => 'date',
-    ),*/
+    ),
     'client_positive_status_proof' => array(
       'field_name' => 'client_positive_status_proof',
       'type'       => 'file',
