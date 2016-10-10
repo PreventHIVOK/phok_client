@@ -1,0 +1,6 @@
+name = PHOK Platform: Client Base
+description = This is the base module for client-related functions.
+package = PHOK Platform
+core = 7.x
+dependencies[] = node
+files[] = phok_client.test
