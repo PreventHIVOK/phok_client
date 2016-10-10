@@ -205,7 +205,7 @@ function client_entity_info_alter(&$entity_info) {
     'label' => t('Example Node List'),
     'custom settings' => TRUE,
   );
-}*/
+}
 
 
 /**
