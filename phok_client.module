@@ -69,7 +69,7 @@ function phok_client_menu() {
     'title' => 'Clients List',
   );
   return $items;
-}*/
+}
 
 /**
  * Implements hook_node_info().
@@ -167,7 +167,7 @@ function client_form($node, $form_state) {
  * @see node_view()
  * @see phok_client_field_formatter_view()
  */
-/*function phok_client_page() {
+function _phok_client_page() {
   // We'll start building a renderable array that will be our page.
   // For now we just declare the array.
   $renderable_array = array();
@@ -191,7 +191,7 @@ function client_form($node, $form_state) {
     $renderable_array['node_list'][] = node_view($node, 'example_node_list');
   }
   return $renderable_array;
-}*/
+}
 
 /**
  * Implements hook_entity_info_alter().
@@ -199,7 +199,7 @@ function client_form($node, $form_state) {
  * We need to modify the default node entity info by adding a new view mode to
  * be used in functions like node_view() or node_build_content().
  */
-/*function phok_client_entity_info_alter(&$entity_info) {
+function client_entity_info_alter(&$entity_info) {
   // Add our new view mode to the list of view modes...
   $entity_info['node']['view modes']['example_node_list'] = array(
     'label' => t('Example Node List'),
@@ -287,7 +287,7 @@ function client_form($node, $form_state) {
  *   An associative array specifying the fields we wish to add to our
  *   new node type.
  */
-/**function _phok_client_installed_fields() {
+function _phok_client_installed_fields() {
   return array(
     'client_positive_status_date' => array(
       'field_name'  => 'client_positive_status_date',
@@ -300,7 +300,7 @@ function client_form($node, $form_state) {
       'cardinality' => 1,
     ),
   );
-}**/
+}
 
 /**
  * Define the field instances for our content type.
@@ -317,7 +317,7 @@ function client_form($node, $form_state) {
  *   An associative array specifying the instances we wish to add to our new
  *   node type.
  */
-/*function _phok_client_installed_instances() {
+function _phok_client_installed_instances() {
   return array(
     'client_positive_status_date' => array(
       'field_name'  => 'client_positive_status_date',
@@ -349,7 +349,7 @@ function client_form($node, $form_state) {
       ),
     ),
   );
-}**/
+}
 
 /**
  * @} End of "defgroup phok_client".
