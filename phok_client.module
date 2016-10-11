@@ -57,21 +57,6 @@
  */
 
 /**
- * Implements hook_menu().
- *
- * We are providing a default page to illustrate the use of our custom node view
- * mode that will live at http://example.com/?q=examples/phok_client
- */
-function phok_client_menu() {
-  $items['examples/phok_client'] = array(
-    'page callback' => 'phok_client_page',
-    'access arguments' => array('access content'),
-    'title' => 'Node Example',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_node_info().
  *
  * We use hook_node_info() to define our node content type.
@@ -80,14 +65,14 @@ function phok_client_node_info() {
   // We define the node type as an associative array.
   return array(
     'phok_client' => array(
-      'name' => t('Example Node Type'),
+      'name' => t('Client'),
       // 'base' tells Drupal the base string for hook functions.
       // This is often the module name; if base is set to 'mymodule',
       // Drupal would call mymodule_insert() or similar for node
       // hooks. In our case, the base is 'phok_client'.
       'base' => 'phok_client',
-      'description' => t('This is an example node type with a few fields.'),
-      'title_label' => t('Example Title'),
+      'description' => t('This is a Client of the organization.'),
+      'title_label' => t('Client Name'),
       // We'll set the 'locked' attribute to TRUE, so users won't be
       // able to change the machine name of our content type.
       'locked' => TRUE,
@@ -115,11 +100,11 @@ function phok_client_node_type_insert($content_type) {
     // node_add_body_field().
     // We'll set the body label now, although we could also set
     // it along with our other instance properties later.
-    $body_instance = node_add_body_field($content_type, t('Example Description'));
+    $body_instance = node_add_body_field($content_type, t('Client Needs Description'));
 
     // Add our example_node_list view mode to the body instance
     // display by instructing the body to display as a summary.
-    $body_instance['display']['example_node_list'] = array(
+    $body_instance['display']['default'] = array(
       'label' => 'hidden',
       'type' => 'text_summary_or_trimmed',
     );
@@ -156,70 +141,6 @@ function phok_client_form($node, $form_state) {
 }
 
 /**
- * Callback that builds our content and returns it to the browser.
- *
- * This callback comes from hook_menu().
- *
- * @return array
- *   A renderable array showing a list of our nodes.
- *
- * @see node_load()
- * @see node_view()
- * @see phok_client_field_formatter_view()
- */
-function phok_client_page() {
-  // We'll start building a renderable array that will be our page.
-  // For now we just declare the array.
-  $renderable_array = array();
-  // We query the database and find all of the nodes for the type we defined.
-  $sql = 'SELECT nid FROM {node} n WHERE n.type = :type AND n.status = :status';
-  $result = db_query($sql,
-    array(
-      ':type' => 'phok_client',
-      ':status' => 1,
-    )
-  );
-  $renderable_array['explanation'] = array(
-    '#markup' => t("Node Example nodes you've created will be displayed here. Note that the color fields will be displayed differently in this list, than if you view the node normally. Click on the node title to see the difference. This is a result of using our 'example_node_list' node view type."),
-  );
-  // Loop through each of our phok_client nodes and instruct node_view
-  // to use our "example_node_list" view.
-  // http://api.drupal.org/api/function/node_load/7
-  // http://api.drupal.org/api/function/node_view/7
-  foreach ($result as $row) {
-    $node = node_load($row->nid);
-    $renderable_array['node_list'][] = node_view($node, 'example_node_list');
-  }
-  return $renderable_array;
-}
-
-/**
- * Implements hook_entity_info_alter().
- *
- * We need to modify the default node entity info by adding a new view mode to
- * be used in functions like node_view() or node_build_content().
- */
-function phok_client_entity_info_alter(&$entity_info) {
-  // Add our new view mode to the list of view modes...
-  $entity_info['node']['view modes']['example_node_list'] = array(
-    'label' => t('Example Node List'),
-    'custom settings' => TRUE,
-  );
-}
-
-/**
- * Implements hook_help().
- */
-function phok_client_help($path, $arg) {
-  switch ($path) {
-    case 'examples/phok_client':
-      return "<p>" . t("The Node Example module provides a custom node type.
-        You can create new Example Node nodes using the <a href='!nodeadd'>node add form</a>.",
-        array('!nodeadd' => url('node/add/node-example'))) . "</p>";
-  }
-}
-
-/**
  * Define the fields for our content type.
  *
  * This big array is factored into this function for readability.
@@ -230,11 +151,6 @@ function phok_client_help($path, $arg) {
  */
 function _phok_client_installed_fields() {
   return array(
-    /*'phok_client_quantity' => array(
-      'field_name'  => 'phok_client_quantity',
-      'cardinality' => 1,
-      'type'        => 'date',
-    ),*/
     'client_hiv_proof' => array(
       'field_name' => 'client_hiv_proof',
       'type'       => 'file',
@@ -246,58 +162,23 @@ function _phok_client_installed_fields() {
 /**
  * Define the field instances for our content type.
  *
- * The instance lets Drupal know which widget to use to allow the user to enter
- * data and how to react in different view modes.  We are going to display a
- * page that uses a custom "phok_client_list" view mode.  We will set a
- * cardinality of three allowing our content type to give the user three color
- * fields.
- *
- * This big array is factored into this function for readability.
- *
  * @return array
  *   An associative array specifying the instances we wish to add to our new
  *   node type.
  */
 function _phok_client_installed_instances() {
   return array(
-    /*'phok_client_quantity' => array(
-      'field_name'  => 'phok_client_quantity',
-      'label' => t('Quantity required'),
-      'type'        => 'text',
-      'widget'      => array(
-        'type'    => 'text_textfield',
-      ),
-      'display' => array(
-        'example_node_list' => array(
-          'label' => 'hidden',
-          'type' => 'hidden',
-        ),
-      ),
-    ),*/
     'client_hiv_proof' => array(
       'field_name'  => 'client_hiv_proof',
       'label'       => t('Proof of HIV+ Status'),
       'required'    => FALSE,
-      'settings'    => array(
-        'file_directory' => '',
-        'file_extensions' => 'pdf xps jpg jpeg png tif',
-        'max_filesize' => '4 MB',
-        'description_field' => FALSE,
-      ),
       'widget'      => array(
-        'type'    => 'file_generic',
+        //'type'    => 'file_generic',
         'weight'  => 2.10,
       ),
       'display' => array(
         'default' => array(
           'label' => 'hidden',
-          'type' => 'file_default',
-          //'settings' => array(),
-        ),
-        'example_node_list' => array(
-          'label' => 'hidden',
-          'type' => 'file_default',
-          //'settings' => array(),
         ),
       ),
     ),
