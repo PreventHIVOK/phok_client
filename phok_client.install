@@ -11,7 +11,7 @@ function phok_client_install() {
   $node_types = node_type_get_types();
   node_add_body_field($node_types[$new_node_type]);
 
-  _add_custom_fields()
+  _add_custom_fields();
 }
 
 /**
@@ -41,13 +41,13 @@ function _phok_client_installed_fields() {
     'client_hiv_status_date' => array(
       'field_name' => 'client_hiv_status_date',
       'label' => $t('Date of HIV+ Diagnosis'),
-      'type' => 'text'
+      'type' => 'text',
     ),
     'client_hiv_status_proof' => array(
       'field_name' => 'client_hiv_status_proof',
       'label' => $t('Proof of HIV+ Status'),
-      'type' => 'text'
-    )
+      'type' => 'text',
+    ),
   );
 }
 
@@ -60,12 +60,12 @@ function _phok_client_installed_instances() {
       'type' => 'text',
       'label' => $t('Date of HIV Diagnosis'),
       'widget' => array(
-        'type' => 'text_textfield'
+        'type' => 'text_textfield',
       ),
       'display' => array(
         'client_list' => array(
           'label' => $t('HIV Diagnosis Date'),
-          'type' => 'text'
+          'type' => 'text',
         ),
       ),
     ),
