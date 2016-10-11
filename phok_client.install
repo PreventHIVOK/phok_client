@@ -8,7 +8,7 @@ function phok_client_install() {
   node_types_rebuild();
   $node_types = node_type_get_types();
   node_add_body_field($node_types[$new_node_type]);
-  _phok_client_add_custom_fields(7100);
+  //_phok_client_add_custom_fields(7100);
 }
 
 function phok_client_update_7100(&$sandbox) {
@@ -16,9 +16,10 @@ function phok_client_update_7100(&$sandbox) {
   return t('Added the HIV Status Date and Proof of Positive fields.');
 }
 
-/*function phok_client_update_7101() {
+function phok_client_update_7101() {
   _phok_client_add_custom_fields(7101);
-}*/
+  return t('Added Facebook and Twitter fields.');
+}
 
 /**
  * Implements hook_uninstall().
@@ -127,6 +128,28 @@ function _phok_client_installed_instances($update_number = NULL) {
     'display' => array(
       'default' => array(
         'label' => $t('HIV Proof of Status'),
+      ),
+    ),
+  );
+
+  $instances[7101]['client_social_media_facebook'] = array(
+    'field_name' => 'client_social_media_facebook',
+    'type' => 'link',
+    'label' => $t('Client Facebook'),
+    'display' => array(
+      'default' => array(
+        'label' => $t('Client Facebook'),
+      ),
+    ),
+  );
+
+  $instances[7101]['client_social_media_twitter'] = array(
+    'field_name' => 'client_social_media_twitter',
+    'type' => 'link',
+    'label' => $t('Client Twitter'),
+    'display' => array(
+      'default' => array(
+        'label' => $t('Client Twitter'),
       ),
     ),
   );
