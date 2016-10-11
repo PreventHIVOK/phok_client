@@ -102,7 +102,7 @@ function phok_client_node_info() {
  * we have to make sure we're only modifying the type we're
  * concerned with.
  */
-function phok_client_node_type_insert($content_type) {
+function client_node_type_insert($content_type) {
   if ($content_type->type == 'client') {
     // First we add the body field. Node API helpfully gives us
     // node_add_body_field().
