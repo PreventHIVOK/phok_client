@@ -189,19 +189,11 @@ function phok_client_theme($existing, $type, $theme, $path) {
  */
 function _phok_client_installed_fields() {
   return array(
-    'phok_client_color' => array(
-      'field_name' => 'phok_client_color',
-      'cardinality' => 3,
-      'type'        => 'text',
-      'settings'    => array(
-        'max_length' => 60,
-      ),
-    ),
-    'client_hiv_date' => array(
+    /*'client_hiv_date' => array(
       'field_name'  => 'client_hiv_date',
       'cardinality' => 1,
-      'type'        => 'datetime',
-    ),
+      'type'        => 'date',
+    ),*/
     'client_hiv_proof' => array(
       'field_name' => 'client_hiv_proof',
       'type'       => 'file',
@@ -227,23 +219,10 @@ function _phok_client_installed_fields() {
  */
 function _phok_client_installed_instances() {
   return array(
-    'phok_client_color' => array(
-      'field_name' => 'phok_client_color',
-      'label'       => t('The colors available for this object.'),
-      'widget'      => array(
-        'type'    => 'text_textfield',
-      ),
-      'display' => array(
-        'example_node_list' => array(
-          'label' => 'hidden',
-          'type' => 'phok_client_colors',
-        ),
-      ),
-    ),
-    'client_hiv_date' => array(
+    /*'client_hiv_date' => array(
       'field_name'  => 'client_hiv_date',
-      'label' => t('Quantity required'),
-      'type'        => 'text',
+      'label' => t('Date of HIV+ Diagnosis'),
+      'type'        => 'datetime',
       'widget'      => array(
         'type'    => 'datetime_select',
       ),
@@ -253,10 +232,10 @@ function _phok_client_installed_instances() {
           'type' => 'hidden',
         ),
       ),
-    ),
+    ),*/
     'client_hiv_proof' => array(
       'field_name'  => 'client_hiv_proof',
-      'label'       => t('Upload an image:'),
+      'label'       => t('Proof of HIV+ Status'),
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'file_file',
