@@ -8,6 +8,7 @@ function phok_client_install() {
   node_types_rebuild();
   $node_types = node_type_get_types();
   node_add_body_field($node_types[$new_node_type]);
+  _phok_client_add_custom_fields(7100);
 }
 
 function phok_client_update_7100(&$sandbox) {
@@ -98,6 +99,7 @@ function _phok_client_installed_fields($update_number = NULL) {
   if (is_int($update_number) && $update_number >= 7100) {
     $fields = $fields[$update_number];
   }
+  print_r($fields);
   return $fields;
 }
 
