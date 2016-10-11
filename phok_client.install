@@ -11,7 +11,7 @@ function phok_client_install() {
   $node_types = node_type_get_types();
   node_add_body_field($node_types[$new_node_type]);
 
-  _add_custom_fields();
+  _phok_client_add_custom_fields(7000);
 }
 
 /**
@@ -29,15 +29,69 @@ function phok_client_uninstall() {
     }
 
     node_delete_multiple($node_ids);
-    _delete_custom_fields();
+    _phok_client_delete_custom_fields();
     node_type_delete($new_node_type);
     field_purge_batch(500);
 }
 
-function _phok_client_installed_fields() {
+function _phok_client_add_custom_fields($update_number = 7000) {
+  $new_node_type = 'client';
+
+  foreach (_phok_client_installed_fields($update_number) as $field) {
+    field_create_field($field);
+  }
+
+  foreach (_phok_client_installed_instances($update_number) as $field_instance) {
+    $field_instance['entity_type'] = 'node';
+    $field_instance['bundle'] = $new_node_type;
+    print_r($field_instance);
+    field_create_instance($field_instance);
+  }
+}
+
+function _phok_client_delete_custom_fields() {
+  $new_node_type = 'client';
+  /*foreach (array_keys(_phok_client_installed_fields()) as $field) {
+    field_delete_field($field);
+  }*/
+  foreach (_phok_client_installed_fields() as $update_number => $fields) {
+    foreach (array_keys($fields) as $field) {
+      field_delete_field($field);
+    }
+  }
+  $instances = field_info_instances('node', $new_node_type);
+  foreach ($instances as $instance_name => $field_instance) {
+    field_delete_instance($field_instance);
+  }
+}
+
+function _phok_client_installed_fields($update_number = NULL) {
   $t = get_t();
 
-  return array(
+  // Instantiate the $fields varriable as an array
+  $fields = array();
+
+  // Date of HIV Diagnosis date field
+  $fields[7000]['client_hiv_status_date'] = array(
+    'field_name' => 'client_hiv_status_date',
+    'label' => $t('Date of HIV+ Diagnosis'),
+    'type' => 'datetime',
+  );
+
+  // Proof of HIV Status file field
+  $fields[7000]['client_hiv_status_proof'] = array(
+    'field_name' => 'client_hiv_status_proof',
+    'label' => $t('Proof of HIV+ Status'),
+    'type' => 'file',
+  );
+
+  if (is_int($update_number) && $update_number <= 7000) {
+    $fields = $fields[$update_number];
+  }
+
+  return $fields;
+
+  /*return array(
     'client_hiv_status_date' => array(
       'field_name' => 'client_hiv_status_date',
       'label' => $t('Date of HIV+ Diagnosis'),
@@ -48,13 +102,54 @@ function _phok_client_installed_fields() {
       'label' => $t('Proof of HIV+ Status'),
       'type' => 'file',
     ),
-  );
+  );*/
 }
 
-function _phok_client_installed_instances() {
+function _phok_client_installed_instances($update_number = NULL) {
   $t = get_t();
 
-  return array(
+  // Instantiate the $fields varriable as an array
+  $instances = array();
+
+  // Date of HIV Diagnosis date field
+  $instances[7000]['client_hiv_status_date'] = array(
+    'field_name' => 'client_hiv_status_date',
+    'type' => 'datetime',
+    'label' => $t('Date of HIV Diagnosis'),
+    //'widget' => array(
+    //  'type' => 'text_textfield',
+    //),
+    'display' => array(
+      'default' => array(
+        'label' => $t('HIV Diagnosis Date'),
+        //'type' => 'text',
+      ),
+    ),
+  );
+
+  // Proof of HIV Status file field
+  $instances[7000]['client_hiv_status_proof'] = array(
+    'field_name' => 'client_hiv_status_proof',
+    'type' => 'file',
+    'label' => $t('Proof of HIV Status'),
+    //'widget' => array(
+    //  'type' => 'text_textfield',
+    //),
+    'display' => array(
+      'default' => array(
+        'label' => $t('HIV Proof of Status'),
+        //'type' => 'text',
+      ),
+    ),
+  );
+
+  if (is_int($update_number) && $update_number <= 7000) {
+    $instances = $instances[$update_number];
+  }
+
+  return $instances;
+
+  /*return array(
     'client_hiv_status_date' => array(
       'field_name' => 'client_hiv_status_date',
       'type' => 'datetime',
@@ -62,8 +157,8 @@ function _phok_client_installed_instances() {
       /*'widget' => array(
         'type' => 'text_textfield',
       ),*/
-      'display' => array(
-        'client_list' => array(
+      /*'display' => array(
+        'default' => array(
           'label' => $t('HIV Diagnosis Date'),
           //'type' => 'text',
         ),
@@ -76,41 +171,12 @@ function _phok_client_installed_instances() {
       /*'widget' => array(
         'type' => 'text_textfield',
       ),*/
-      'display' => array(
-        'client_list' => array(
+      /*'display' => array(
+        'default' => array(
           'label' => $t('HIV Proof of Status'),
           //'type' => 'text',
         ),
       ),
     ),
-  );
-}
-
-function _add_custom_fields() {
-  $new_node_type = 'client';
-
-  foreach (_phok_client_installed_fields() as $field) {
-    field_create_field($field);
-  }
-
-  foreach (_phok_client_installed_instances() as $fieldinstance) {
-    $fieldinstance['entity_type'] = 'node';
-    $fieldinstance['bundle'] = $new_node_type;
-    print_r($fieldinstance);
-    field_create_instance($fieldinstance);
-  }
-}
-
-function _delete_custom_fields() {
-  $new_node_type = 'client';
-
-  foreach (array_keys(_phok_client_installed_fields()) as $field) {
-    field_delete_field($field);
-  }
-
-  $instances = field_info_instances('node', $new_node_type);
-
-  foreach ($instances as $instance_name => $fieldinstance) {
-    field_delete_instance($fieldinstance);
-  }
+  );*/
 }
