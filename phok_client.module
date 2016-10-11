@@ -13,11 +13,6 @@
  * @{
  * Example defining a node type in code.
  *
- * This is an example outlining how a module can be used to define a new
- * node type. Our example node type will allow users to specify multiple
- * "colors", a "quantity" and an "image" for their nodes; some kind of
- * rudimentary inventory-tracking system, perhaps?
- *
  * The basic pattern for defining a node type is to tell Drupal about the
  * node's fields and view modes. Drupal will then take over and manage
  * the storage for this node type. This differs from Drupal 6, where we
@@ -57,21 +52,6 @@
  */
 
 /**
- * Implements hook_menu().
- *
- * We are providing a default page to illustrate the use of our custom node view
- * mode that will live at http://example.com/?q=examples/phok_client
- */
-function phok_client_menu() {
-  $items['clients'] = array(
-    'page callback' => 'phok_client_page',
-    'access arguments' => array('access content'),
-    'title' => 'Clients List',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_node_info().
  *
  * We use hook_node_info() to define our node content type.
@@ -79,13 +59,13 @@ function phok_client_menu() {
 function phok_client_node_info() {
   // We define the node type as an associative array.
   return array(
-    'client' => array(
+    'phok_client' => array(
       'name' => t('Client'),
       // 'base' tells Drupal the base string for hook functions.
       // This is often the module name; if base is set to 'mymodule',
       // Drupal would call mymodule_insert() or similar for node
       // hooks. In our case, the base is 'phok_client'.
-      'base' => 'client',
+      'base' => 'phok_client',
       'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
       'title_label' => t('Client Name'),
       // We'll set the 'locked' attribute to TRUE, so users won't be
@@ -110,7 +90,7 @@ function phok_client_node_info() {
  * concerned with.
  */
 function phok_client_node_type_insert($content_type) {
-  if ($content_type->type == 'client') {
+  if ($content_type->type == 'phok_client') {
     // First we add the body field. Node API helpfully gives us
     // node_add_body_field().
     // We'll set the body label now, although we could also set
@@ -135,7 +115,7 @@ function phok_client_node_type_insert($content_type) {
     // Create all the instances for our fields.
     foreach (_phok_client_installed_instances() as $instance) {
       $instance['entity_type'] = 'node';
-      $instance['bundle'] = 'client';
+      $instance['bundle'] = 'phok_client';
       field_create_instance($instance);
     }
   }
@@ -156,129 +136,6 @@ function client_form($node, $form_state) {
 }
 
 /**
- * Callback that builds our content and returns it to the browser.
- *
- * This callback comes from hook_menu().
- *
- * @return array
- *   A renderable array showing a list of our nodes.
- *
- * @see node_load()
- * @see node_view()
- * @see phok_client_field_formatter_view()
- */
-function _phok_client_page() {
-  // We'll start building a renderable array that will be our page.
-  // For now we just declare the array.
-  $renderable_array = array();
-  // We query the database and find all of the nodes for the type we defined.
-  $sql = 'SELECT nid FROM {node} n WHERE n.type = :type AND n.status = :status';
-  $result = db_query($sql,
-    array(
-      ':type' => 'phok_client',
-      ':status' => 1,
-    )
-  );
-  $renderable_array['explanation'] = array(
-    '#markup' => t("Node Example nodes you've created will be displayed here. Note that the color fields will be displayed differently in this list, than if you view the node normally. Click on the node title to see the difference. This is a result of using our 'example_node_list' node view type."),
-  );
-  // Loop through each of our phok_client nodes and instruct node_view
-  // to use our "example_node_list" view.
-  // http://api.drupal.org/api/function/node_load/7
-  // http://api.drupal.org/api/function/node_view/7
-  foreach ($result as $row) {
-    $node = node_load($row->nid);
-    $renderable_array['node_list'][] = node_view($node, 'example_node_list');
-  }
-  return $renderable_array;
-}
-
-/**
- * Implements hook_entity_info_alter().
- *
- * We need to modify the default node entity info by adding a new view mode to
- * be used in functions like node_view() or node_build_content().
- */
-function client_entity_info_alter(&$entity_info) {
-  // Add our new view mode to the list of view modes...
-  $entity_info['node']['view modes']['example_node_list'] = array(
-    'label' => t('Example Node List'),
-    'custom settings' => TRUE,
-  );
-}
-
-
-/**
- * Implements hook_field_formatter_info().
- */
-/*function phok_client_field_formatter_info() {
-  return array(
-    'phok_client_colors' => array(
-      'label' => t('Node Example Color Handle'),
-      'field types' => array('text'),
-    ),
-  );
-}*/
-
-/**
- * Implements hook_field_formatter_view().
- *
- * @todo: We need to provide a formatter for the colors that a user is allowed
- * to enter during node creation.
- */
-/*function phok_client_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  switch ($display['type']) {
-    case 'phok_client_colors':
-      foreach ($items as $delta => $item) {
-        $element[$delta]['#type'] = 'markup';
-        $color = $item['safe_value'];
-        $element[$delta]['#markup'] = theme('example_node_color', array('color' => $color));
-      }
-      break;
-  }
-
-  return $element;
-}*/
-
-/**
- * Implements hook_theme().
- *
- * This lets us tell Drupal about our theme functions and their arguments.
- */
-/*function phok_client_theme($existing, $type, $theme, $path) {
-  return array(
-    'example_node_color' => array(
-      'variables' => array('color' => NULL),
-    ),
-  );
-}*/
-
-/**
- * Implements hook_help().
- */
-/*function phok_client_help($path, $arg) {
-  switch ($path) {
-    case 'examples/phok_client':
-      return "<p>" . t("The Node Example module provides a custom node type.
-        You can create new Example Node nodes using the <a href='!nodeadd'>node add form</a>.",
-        array('!nodeadd' => url('node/add/node-example'))) . "</p>";
-  }
-}*/
-
-/**
- * A custom theme function.
- *
- * By using this function to format our node-specific information, themes
- * can override this presentation if they wish.  This is a simplifed theme
- * function purely for illustrative purposes.
- */
-/*function theme_example_node_color($variables) {
-  $output = '<span style="background-color: #ccc; padding: 1em; margin-bottom: 1em; float: left; color: ' . $variables['color'] . '">' . $variables['color'] . '</span>';
-  return $output;
-}*/
-
-/**
  * Define the fields for our content type.
  *
  * This big array is factored into this function for readability.
@@ -296,8 +153,8 @@ function _phok_client_installed_fields() {
     ),
     'client_positive_status_proof' => array(
       'field_name' => 'client_positive_status_proof',
-      'type'       => 'file',
       'cardinality' => 1,
+      'type'       => 'file',
     ),
   );
 }
@@ -323,30 +180,11 @@ function _phok_client_installed_instances() {
       'field_name'  => 'client_positive_status_date',
       'label' => t('Date of HIV+ Status'),
       'type'        => 'date',
-      'widget'      => array(
-        'type'    => 'select',
-      ),
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'hidden',
-        ),
-      ),
     ),
     'client_positive_status_proof' => array(
       'field_name'  => 'client_positive_status_proof',
       'label'       => t('Proof of HIV+ Status'),
       'required'    => FALSE,
-      'widget' => array(
-        'type'    => 'file_file',
-        'weight'  => 2.10,
-      ),
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'hidden',
-        ),
-      ),
     ),
   );
 }
