@@ -2,58 +2,8 @@
 
 /**
  * @file
- * Module file for Node Example module.
+ * PHOK Platform: Client
  *
- * Part of the Examples for Developers project.
- */
-
-/**
- * @defgroup phok_client Example: Node
- * @ingroup examples
- * @{
- * Example defining a node type in code.
- *
- * This is an example outlining how a module can be used to define a new
- * node type. Our example node type will allow users to specify multiple
- * "colors", a "quantity" and an "image" for their nodes; some kind of
- * rudimentary inventory-tracking system, perhaps?
- *
- * The basic pattern for defining a node type is to tell Drupal about the
- * node's fields and view modes. Drupal will then take over and manage
- * the storage for this node type. This differs from Drupal 6, where we
- * would have to handle all the database storage ourselves in the module.
- *
- * Remember that most node types do not require any custom code, as one
- * simply creates them using the Drupal user interface. Creating a node like
- * this in code is a special case.
- *
- * At absolute minimum, in order to provide a content type for
- * node, you have to implement hook_node_info() and hook_form().
- * Node can take care of the rest, if you want it to.
- *
- * First and foremost, defining a node type happens in
- * hook_node_info(). Our implementation of this hook gives
- * Drupal an array of information about the content type
- * we want to create.
- *
- * Next, since we want to add fields to our content type, we
- * implement hook_node_type_insert(), which gives us a chance
- * to modify recently-created content types.
- *
- * Drupal is able to handle deletion of our content, including
- * dependencies based on re-use of our field instances, so we don't
- * have to manage any of it.
- *
- * In previous versions of Drupal, "teaser" and "page" were node view modes.
- * In Drupal 7 we can define custom view modes to let the node know how it
- * should return it's data.  This module declares a custom view mode called
- * "example_node_list".
- *
- * Consult the @link http://drupal.org/node/707832 Field API Tutorial @endlink
- * and @link http://drupal.org/node/443536 Field API Handbook Page @endlink
- * and @link field Field API documentation @endlink.
- *
- * @see field_example.module
  */
 
 /**
@@ -62,102 +12,29 @@
  * We use hook_node_info() to define our node content type.
  */
 function phok_client_node_info() {
-  // We define the node type as an associative array.
   return array(
-    'phok_client' => array(
-      'name' => t('Client'),
-      // 'base' tells Drupal the base string for hook functions.
-      // This is often the module name; if base is set to 'mymodule',
-      // Drupal would call mymodule_insert() or similar for node
-      // hooks. In our case, the base is 'phok_client'.
-      'base' => 'phok_client',
-      'description' => t('This is a Client of the organization.'),
+    'client' => array(
+      'name'        => t('Client'),
+      'base'        => 'client',
+      'description' => t('A <em>client</em> is an individual who utilizes the services of the organization.'),
+      'help'        => t('A <em>client</em> is an individual who utilizes the services of the organization. It is important to enter this information as fully and completely as possible.')
+      'has_title'   => TRUE,
       'title_label' => t('Client Name'),
-      // We'll set the 'locked' attribute to TRUE, so users won't be
-      // able to change the machine name of our content type.
-      'locked' => TRUE,
+      'locked'      => TRUE, // Cannot change machine name
     ),
   );
-}
-
-/**
- * Implements hook_node_type_insert().
- *
- * Much like hook_node_insert() lets us know that a node is being
- * inserted into the database, hook_node_type_insert() lets us know
- * that a new content type has been inserted.
- *
- * Since Drupal will at some point insert our new content type,
- * this gives us a chance to add the fields we want.
- *
- * It is called for all inserts to the content type database, so
- * we have to make sure we're only modifying the type we're
- * concerned with.
- */
-function phok_client_node_type_insert($content_type) {
-  if ($content_type->type == 'phok_client') {
-    // First we add the body field. Node API helpfully gives us
-    // node_add_body_field().
-    // We'll set the body label now, although we could also set
-    // it along with our other instance properties later.
-    $body_instance = node_add_body_field($content_type, t('Client Needs Description'));
-
-    // Add our example_node_list view mode to the body instance
-    // display by instructing the body to display as a summary.
-    $body_instance['display']['default'] = array(
-      'label' => 'hidden',
-      'type' => 'text_summary_or_trimmed',
-    );
-
-    // Save our changes to the body field instance.
-    field_update_instance($body_instance);
-
-    // Create all the fields we are adding to our content type.
-    /*foreach (_phok_client_installed_fields() as $field) {
-      field_create_field($field);
-    }*/
-
-    // Create all the instances for our fields.
-    foreach (_phok_client_installed_instances() as $instance) {
-      $instance['entity_type'] = 'node';
-      $instance['bundle'] = 'phok_client';
-      field_create_instance($instance);
-    }
-  }
 }
 
 /**
  * Implements hook_form().
  *
- * Drupal needs for us to provide a form that lets the user
- * add content. This is the form that the user will see if
- * they go to node/add/node-example.
- *
- * You can get fancy with this form, or you can just punt
- * and return the default form that node_content will provide.
+ * Drupal needs for us to provide a form that lets the user add content. You
+ * can get fancy with this form, or you can just punt and return the default
+ * form that node_content will provide.
  */
 function phok_client_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
-
-/**
- * Define the fields for our content type.
- *
- * This big array is factored into this function for readability.
- *
- * @return array
- *   An associative array specifying the fields we wish to add to our
- *   new node type.
- */
-/*function _phok_client_installed_fields() {
-  return array(
-    'phok_client_hiv_proof' => array(
-      'field_name' => 'phok_client_hiv_proof',
-      'type'       => 'file',
-      'cardinality' => 1,
-    ),
-  );
-}*/
 
 /**
  * Define the field instances for our content type.

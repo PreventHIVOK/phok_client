@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function phok_client_install() {
+  $new_node_type = 'client';
+
+  node_types_rebuild();
+
+  $node_types = node_type_get_types();
+  node_add_body_field($node_types[$new_node_type]);
+
+  _add_custom_fields()
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function phok_client_uninstall() {
+    $new_node_type = 'client';
+
+    $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+    $result = db_query($sql, array(':type' => $new_node_type));
+
+    $node_ids = array();
+    foreach ($result as $row) {
+      $node_ids[] = $row->nid;
+    }
+
+    node_delete_multiple($node_ids);
+    _delete_custom_fields();
+    node_type_delete($new_node_type);
+    field_purge_batch(500);
+}
+
+function _phok_client_installed_fields() {
+  $t = get_t();
+
+  return array(
+    'client_hiv_status_date' => array(
+      'field_name' => 'client_hiv_status_date',
+      'label' => $t('Date of HIV+ Diagnosis'),
+      'type' => 'text'
+    ),
+    'client_hiv_status_proof' => array(
+      'field_name' => 'client_hiv_status_proof',
+      'label' => $t('Proof of HIV+ Status'),
+      'type' => 'text'
+    )
+  );
+}
+
+function _phok_client_installed_instances() {
+  $t = get_t();
+
+  return array(
+    'client_hiv_status_date' => array(
+      'field_name' => 'client_hiv_status_date',
+      'type' => 'text',
+      'label' => $t('Date of HIV Diagnosis'),
+      'widget' => array(
+        'type' => 'text_textfield'
+      ),
+      'display' => array(
+        'client_list' => array(
+          'label' => $t('HIV Diagnosis Date'),
+          'type' => 'text'
+        ),
+      ),
+    ),
+    'client_hiv_status_proof' => array(
+      'field_name' => 'client_hiv_status_proof',
+      'type' => 'text',
+      'label' => $t('Proof of HIV Status'),
+      'widget' => array(
+        'type' => 'text_textfield',
+      ),
+      'display' => array(
+        'client_list' => array(
+          'label' => $t('HIV Proof of Status'),
+          'type' => 'text',
+        ),
+      ),
+    ),
+  );
+}
+
+function _add_custom_fields() {
+  $new_node_type = 'client';
+
+  foreach (_productcustomtype_installed_fields() as $field) {
+    field_create_field($field);
+  }
+
+  foreach (_productcustomtype_installed_instances() as $fieldinstance) {
+    $fieldinstance['entity_type'] = 'node';
+    $fieldinstance['bundle'] = $new_node_type;
+    print_r($fieldinstance);
+    field_create_instance($fieldinstance);
+  }
+}
+
+function _delete_custom_fields() {
+  $new_node_type = 'client';
+
+  foreach (array_keys(_productcustomtype_installed_fields()) as $field) {
+    field_delete_field($field);
+  }
+
+  $instances = field_info_instances('node', $new_node_type);
+
+  foreach ($instances as $instance_name => $fieldinstance) {
+    field_delete_instance($fieldinstance);
+  }
+}
