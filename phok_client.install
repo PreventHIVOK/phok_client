@@ -10,12 +10,12 @@ function phok_client_install() {
   node_add_body_field($node_types[$new_node_type]);
 }
 
-function phok_client_update_7000() {
-  _phok_client_add_custom_fields(7000);
+function phok_client_update_7100(&$sandbox) {
+  _phok_client_add_custom_fields(7100);
 }
 
-/*function phok_client_update_7001() {
-  _phok_client_add_custom_fields(7001);
+/*function phok_client_update_7101() {
+  _phok_client_add_custom_fields(7101);
 }*/
 
 /**
@@ -38,7 +38,7 @@ function phok_client_uninstall() {
     field_purge_batch(500);
 }
 
-function _phok_client_add_custom_fields($update_number = 7000) {
+function _phok_client_add_custom_fields($update_number = 7100) {
   $new_node_type = 'client';
   $fields = _phok_client_installed_fields($update_number);
   foreach ($fields as $field) {
@@ -72,29 +72,29 @@ function _phok_client_installed_fields($update_number = NULL) {
   // Instantiate the $fields varriable as an array
   $fields = array();
   // Date of HIV Diagnosis date field
-  $fields[7000]['client_hiv_status_date'] = array(
+  $fields[7100]['client_hiv_status_date'] = array(
     'field_name' => 'client_hiv_status_date',
     'label' => $t('Client Date of HIV+ Diagnosis'),
     'type' => 'datetime',
   );
   // Proof of HIV Status file field
-  $fields[7000]['client_hiv_status_proof'] = array(
+  $fields[7100]['client_hiv_status_proof'] = array(
     'field_name' => 'client_hiv_status_proof',
     'label' => $t('Client Proof of HIV+ Status'),
     'type' => 'file',
   );
-  $fields[7001]['client_social_media_facebook'] = array(
+  $fields[7101]['client_social_media_facebook'] = array(
     'field_name' => 'client_social_media_facebook',
     'label' => $t('Client Facebook'),
     'type' => 'link',
   );
-  $fields[7001]['client_social_media_twitter'] = array(
+  $fields[7101]['client_social_media_twitter'] = array(
     'field_name' => 'client_social_media_twitter',
     'label' => $t('Client Twitter'),
     'type' => 'link',
   );
 
-  if (is_int($update_number) && $update_number <= 7000) {
+  if (is_int($update_number) && $update_number >= 7100) {
     $fields = $fields[$update_number];
   }
   return $fields;
@@ -128,7 +128,7 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
 
-  if (is_int($update_number) && $update_number <= 7000) {
+  if (is_int($update_number) && $update_number >= 7100) {
     $instances = $instances[$update_number];
   }
   return $instances;
