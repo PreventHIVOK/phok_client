@@ -17,7 +17,7 @@ function phok_client_node_info() {
       'name'        => t('Client'),
       'base'        => 'client',
       'description' => t('A <em>client</em> is an individual who utilizes the services of the organization.'),
-      'help'        => t('A <em>client</em> is an individual who utilizes the services of the organization. It is important to enter this information as fully and completely as possible.')
+      'help'        => t('A <em>client</em> is an individual who utilizes the services of the organization. It is important to enter this information as fully and completely as possible.'),
       'has_title'   => TRUE,
       'title_label' => t('Client Name'),
       'locked'      => TRUE, // Cannot change machine name
