@@ -75,12 +75,12 @@ function _phok_client_installed_fields() {
   $fields['client_social_media_facebook'] = array(
     'field_name' => 'client_social_media_facebook',
     'label' => $t('Client Facebook'),
-    'type' => 'link',
+    'type' => 'link_field',
   );
   $fields['client_social_media_twitter'] = array(
     'field_name' => 'client_social_media_twitter',
     'label' => $t('Client Twitter'),
-    'type' => 'link',
+    'type' => 'link_field',
   );
 
   return $fields;
@@ -116,7 +116,7 @@ function _phok_client_installed_instances() {
 
   $instances['client_social_media_facebook'] = array(
     'field_name' => 'client_social_media_facebook',
-    'type' => 'link',
+    'type' => 'link_field',
     'label' => $t('Client Facebook'),
     'display' => array(
       'default' => array(
@@ -127,7 +127,7 @@ function _phok_client_installed_instances() {
 
   $instances['client_social_media_twitter'] = array(
     'field_name' => 'client_social_media_twitter',
-    'type' => 'link',
+    'type' => 'link_field',
     'label' => $t('Client Twitter'),
     'display' => array(
       'default' => array(
