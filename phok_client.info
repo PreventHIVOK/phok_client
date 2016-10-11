@@ -3,6 +3,7 @@ description = This is the base module for client-related functions.
 package = PHOK Platform
 core = 7.x
 dependencies[] = date
+dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = node
 files[] = phok_client.test
