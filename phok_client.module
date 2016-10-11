@@ -60,17 +60,30 @@ function phok_client_node_info() {
   // We define the node type as an associative array.
   return array(
     'client' => array(
-      'name' => t('Client'),
+      'name' => t('Client'), // The human-readbale name
       // 'base' tells Drupal the base string for hook functions.
       // This is often the module name; if base is set to 'mymodule',
       // Drupal would call mymodule_insert() or similar for node
       // hooks. In our case, the base is 'phok_client'.
-      'base' => 'client',
+      'base'        => 'client', // The machine-name
       'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
-      'title_label' => t('Client Name'),
-      // We'll set the 'locked' attribute to TRUE, so users won't be
-      // able to change the machine name of our content type.
-      'locked' => TRUE,
+      'help'        => t('This help text needs some work.'),
+      'has_title'   => FALSE, // Done not have a title field
+      //'title_label' => t('Name'),
+      'locked' => TRUE, // Cannot change machine name
+    ),
+    'client_appointment' => array(
+      'name' => t('Client: Appointment'), // The human-readbale name
+      // 'base' tells Drupal the base string for hook functions.
+      // This is often the module name; if base is set to 'mymodule',
+      // Drupal would call mymodule_insert() or similar for node
+      // hooks. In our case, the base is 'phok_client'.
+      'base'        => 'client_appointment', // The machine-name
+      'description' => t('An <em>appointment</em> is an in-person meeting.'),
+      'help'        => t('This help text needs some work.'),
+      'has_title'   => FALSE, // Does not have a title field
+      //'title_label' => t('Name'),
+      'locked' => TRUE, // Cannot change machine name
     ),
   );
 }
