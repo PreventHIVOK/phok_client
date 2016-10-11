@@ -131,7 +131,7 @@ function phok_client_node_type_insert($content_type) {
  * You can get fancy with this form, or you can just punt
  * and return the default form that node_content will provide.
  */
-function client_form($node, $form_state) {
+function phok_client_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
