@@ -179,14 +179,14 @@ function _phok_client_installed_instances() {
     'client_positive_status_date' => array(
       'field_name'  => 'client_hiv_status_date',
       'label' => t('Date of HIV+ Status'),
-      'description' => t('Enter the date that the client was diagnosed as living with HIV.')
+      'description' => t('Enter the date that the client was diagnosed as living with HIV.'),
       'type'        => 'datetime',
       'required'    => TRUE,
     ),
     'client_positive_status_proof' => array(
       'field_name'  => 'client_hiv_status_proof',
       'label'       => t('Proof of HIV+ Status'),
-      'description' => t('Upload a scan or image of the document certifying that the client is living with HIV.')
+      'description' => t('Upload a scan or image of the document certifying that the client is living with HIV.'),
       'required'    => FALSE,
     ),
   );
