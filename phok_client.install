@@ -89,11 +89,11 @@ function _phok_client_installed_instances() {
 function _add_custom_fields() {
   $new_node_type = 'client';
 
-  foreach (_productcustomtype_installed_fields() as $field) {
+  foreach (_phok_client_installed_fields() as $field) {
     field_create_field($field);
   }
 
-  foreach (_productcustomtype_installed_instances() as $fieldinstance) {
+  foreach (_phok_client_installed_instances() as $fieldinstance) {
     $fieldinstance['entity_type'] = 'node';
     $fieldinstance['bundle'] = $new_node_type;
     print_r($fieldinstance);
@@ -104,7 +104,7 @@ function _add_custom_fields() {
 function _delete_custom_fields() {
   $new_node_type = 'client';
 
-  foreach (array_keys(_productcustomtype_installed_fields()) as $field) {
+  foreach (array_keys(_phok_client_installed_fields()) as $field) {
     field_delete_field($field);
   }
 
