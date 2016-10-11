@@ -59,13 +59,13 @@
 function phok_client_node_info() {
   // We define the node type as an associative array.
   return array(
-    'phok_client' => array(
+    'client' => array(
       'name' => t('Client'),
       // 'base' tells Drupal the base string for hook functions.
       // This is often the module name; if base is set to 'mymodule',
       // Drupal would call mymodule_insert() or similar for node
       // hooks. In our case, the base is 'phok_client'.
-      'base' => 'phok_client',
+      'base' => 'client',
       'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
       'title_label' => t('Client Name'),
       // We'll set the 'locked' attribute to TRUE, so users won't be
@@ -90,7 +90,7 @@ function phok_client_node_info() {
  * concerned with.
  */
 function phok_client_node_type_insert($content_type) {
-  if ($content_type->type == 'phok_client') {
+  if ($content_type->type == 'client') {
     // First we add the body field. Node API helpfully gives us
     // node_add_body_field().
     // We'll set the body label now, although we could also set
@@ -146,13 +146,13 @@ function phok_client_form($node, $form_state) {
  */
 function _phok_client_installed_fields() {
   return array(
-    'client_positive_status_date' => array(
-      'field_name'  => 'client_positive_status_date',
+    'client_hiv_date' => array(
+      'field_name'  => 'client_hiv_date',
       'cardinality' => 1,
-      'type'        => 'date',
+      'type'        => 'datetime',
     ),
-    'client_positive_status_proof' => array(
-      'field_name' => 'client_positive_status_proof',
+    'client_hiv_proof' => array(
+      'field_name' => 'client_hiv_proof',
       'cardinality' => 1,
       'type'       => 'file',
     ),
@@ -176,15 +176,15 @@ function _phok_client_installed_fields() {
  */
 function _phok_client_installed_instances() {
   return array(
-    'client_positive_status_date' => array(
-      'field_name'  => 'client_hiv_status_date',
+    'client_hiv_date' => array(
+      'field_name'  => 'client_hiv_date',
       'label' => t('Date of HIV+ Status'),
       'description' => t('Enter the date that the client was diagnosed as living with HIV.'),
-      'type'        => 'datetime',
+      'type'        => 'select',
       'required'    => TRUE,
     ),
-    'client_positive_status_proof' => array(
-      'field_name'  => 'client_hiv_status_proof',
+    'client_hiv_proof' => array(
+      'field_name'  => 'client_hiv_proof',
       'label'       => t('Proof of HIV+ Status'),
       'description' => t('Upload a scan or image of the document certifying that the client is living with HIV.'),
       'required'    => FALSE,
