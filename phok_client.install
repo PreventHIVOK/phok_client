@@ -71,7 +71,7 @@ function _phok_client_installed_instances() {
     ),
     'client_hiv_status_proof' => array(
       'field_name' => 'client_hiv_status_proof',
-      'type' => 'text',
+      'type' => 'file',
       'label' => $t('Proof of HIV Status'),
       /*'widget' => array(
         'type' => 'text_textfield',
