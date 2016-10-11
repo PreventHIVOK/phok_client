@@ -90,7 +90,7 @@ function phok_client_node_info() {
  * concerned with.
  */
 function phok_client_node_type_insert($content_type) {
-  if ($content_type->type == 'client') {
+  if ($content_type->type == 'phok_client') {
     // First we add the body field. Node API helpfully gives us
     // node_add_body_field().
     // We'll set the body label now, although we could also set
