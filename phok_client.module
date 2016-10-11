@@ -48,7 +48,7 @@ function _phok_client_installed_instances() {
     'phok_client_hiv_proof' => array(
       'field_name'  => 'phok_client_hiv_proof',
       'label'       => t('Proof of HIV+ Status'),
-      'description' => t('');
+      'description' => t(''),
       'required'    => FALSE,
       //'settings'    => array(),
       'widget'      => array(
