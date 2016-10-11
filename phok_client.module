@@ -93,13 +93,6 @@ function phok_client_node_type_insert($content_type) {
     // it along with our other instance properties later.
     $body_instance = node_add_body_field($content_type, t('Client Summary'));
 
-    // Add our example_node_list view mode to the body instance
-    // display by instructing the body to display as a summary.
-    $body_instance['display']['default'] = array(
-      'label' => 'hidden',
-      'type' => 'text_summary_or_trimmed',
-    );
-
     // Save our changes to the body field instance.
     field_update_instance($body_instance);
 
