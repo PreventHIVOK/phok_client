@@ -59,7 +59,7 @@
 function phok_client_node_info() {
   // We define the node type as an associative array.
   return array(
-    'client' => array(
+    'phok_client' => array(
       'name' => t('Client'), // The human-readbale name
       // 'base' tells Drupal the base string for hook functions.
       // This is often the module name; if base is set to 'mymodule',
@@ -141,7 +141,7 @@ function phok_client_node_type_insert($content_type) {
  * You can get fancy with this form, or you can just punt and return the
  * default form that node_content will provide.
  */
-function client_form($node, $form_state) {
+function phok_client_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
