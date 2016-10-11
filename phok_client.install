@@ -8,17 +8,7 @@ function phok_client_install() {
   node_types_rebuild();
   $node_types = node_type_get_types();
   node_add_body_field($node_types[$new_node_type]);
-  //_phok_client_add_custom_fields(7100);
-}
-
-function phok_client_update_7100(&$sandbox) {
-  _phok_client_add_custom_fields(7100);
-  return t('Added the HIV Status Date and Proof of Positive fields.');
-}
-
-function phok_client_update_7101() {
-  _phok_client_add_custom_fields(7101);
-  return t('Added Facebook and Twitter fields.');
+  _phok_client_add_custom_fields();
 }
 
 /**
@@ -41,27 +31,23 @@ function phok_client_uninstall() {
     field_purge_batch(500);
 }
 
-function _phok_client_add_custom_fields($update_number = 7100) {
+function _phok_client_add_custom_fields() {
   $new_node_type = 'client';
-  $fields = _phok_client_installed_fields($update_number);
-  foreach ($fields as $field) {
+  foreach (_phok_client_installed_fields() as $field) {
     field_create_field($field);
   }
-  $instances = _phok_client_installed_instances($update_number);
-  foreach ($instances as $field_instance) {
+  foreach (_phok_client_installed_instances() as $field_instance) {
     $field_instance['entity_type'] = 'node';
     $field_instance['bundle'] = $new_node_type;
-    print_r($field_instance);
+    //print_r($field_instance);
     field_create_instance($field_instance);
   }
 }
 
 function _phok_client_delete_custom_fields() {
   $new_node_type = 'client';
-  foreach (_phok_client_installed_fields() as $update_number => $fields) {
-    foreach (array_keys($fields) as $field) {
-      field_delete_field($field);
-    }
+  foreach (array_keys(_phok_client_installed_fields()) as $field) {
+    field_delete_field($field);
   }
   $instances = field_info_instances('node', $new_node_type);
   foreach ($instances as $instance_name => $field_instance) {
@@ -69,48 +55,44 @@ function _phok_client_delete_custom_fields() {
   }
 }
 
-function _phok_client_installed_fields($update_number = NULL) {
+function _phok_client_installed_fields() {
   $t = get_t();
 
   // Instantiate the $fields varriable as an array
   $fields = array();
   // Date of HIV Diagnosis date field
-  $fields[7100]['client_hiv_status_date'] = array(
+  $fields['client_hiv_status_date'] = array(
     'field_name' => 'client_hiv_status_date',
     'label' => $t('Client Date of HIV+ Diagnosis'),
     'type' => 'datetime',
   );
   // Proof of HIV Status file field
-  $fields[7100]['client_hiv_status_proof'] = array(
+  $fields['client_hiv_status_proof'] = array(
     'field_name' => 'client_hiv_status_proof',
     'label' => $t('Client Proof of HIV+ Status'),
     'type' => 'file',
   );
-  $fields[7101]['client_social_media_facebook'] = array(
+  $fields['client_social_media_facebook'] = array(
     'field_name' => 'client_social_media_facebook',
     'label' => $t('Client Facebook'),
     'type' => 'link',
   );
-  $fields[7101]['client_social_media_twitter'] = array(
+  $fields['client_social_media_twitter'] = array(
     'field_name' => 'client_social_media_twitter',
     'label' => $t('Client Twitter'),
     'type' => 'link',
   );
 
-  if (is_int($update_number) && $update_number >= 7100) {
-    $fields = $fields[$update_number];
-  }
-  print_r($fields);
   return $fields;
 }
 
-function _phok_client_installed_instances($update_number = NULL) {
+function _phok_client_installed_instances() {
   $t = get_t();
 
   // Instantiate the $fields varriable as an array
   $instances = array();
   // Date of HIV Diagnosis date field
-  $instances[7100]['client_hiv_status_date'] = array(
+  $instances['client_hiv_status_date'] = array(
     'field_name' => 'client_hiv_status_date',
     'type' => 'datetime',
     'label' => $t('Date of HIV Diagnosis'),
@@ -121,7 +103,7 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
   // Proof of HIV Status file field
-  $instances[7100]['client_hiv_status_proof'] = array(
+  $instances['client_hiv_status_proof'] = array(
     'field_name' => 'client_hiv_status_proof',
     'type' => 'file',
     'label' => $t('Proof of HIV Status'),
@@ -132,7 +114,7 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
 
-  $instances[7101]['client_social_media_facebook'] = array(
+  $instances['client_social_media_facebook'] = array(
     'field_name' => 'client_social_media_facebook',
     'type' => 'link',
     'label' => $t('Client Facebook'),
@@ -143,7 +125,7 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
 
-  $instances[7101]['client_social_media_twitter'] = array(
+  $instances['client_social_media_twitter'] = array(
     'field_name' => 'client_social_media_twitter',
     'type' => 'link',
     'label' => $t('Client Twitter'),
@@ -154,9 +136,6 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
 
-  if (is_int($update_number) && $update_number >= 7100) {
-    $instances = $instances[$update_number];
-  }
   print_r($instances);
   return $instances;
 }
