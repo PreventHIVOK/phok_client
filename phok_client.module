@@ -65,7 +65,7 @@ function phok_client_node_info() {
       // This is often the module name; if base is set to 'mymodule',
       // Drupal would call mymodule_insert() or similar for node
       // hooks. In our case, the base is 'phok_client'.
-      'base'        => 'client', // The machine-name
+      'base'        => 'phok_client', // The machine-name
       'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
       'help'        => t('This help text needs some work.'),
       'has_title'   => FALSE, // Done not have a title field
@@ -102,8 +102,8 @@ function phok_client_node_info() {
  * we have to make sure we're only modifying the type we're
  * concerned with.
  */
-function client_node_type_insert($content_type) {
-  if ($content_type->type == 'client') {
+function phok_client_node_type_insert($content_type) {
+  if ($content_type->type == 'phok_client') {
     // First we add the body field. Node API helpfully gives us
     // node_add_body_field().
     // We'll set the body label now, although we could also set
@@ -128,7 +128,7 @@ function client_node_type_insert($content_type) {
     // Create all the instances for our fields.
     foreach (_phok_client_installed_instances() as $instance) {
       $instance['entity_type'] = 'node';
-      $instance['bundle'] = 'client';
+      $instance['bundle'] = 'phok_client';
       field_create_instance($instance);
     }
   }
