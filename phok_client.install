@@ -109,7 +109,7 @@ function _phok_client_installed_instances($update_number = NULL) {
   // Instantiate the $fields varriable as an array
   $instances = array();
   // Date of HIV Diagnosis date field
-  $instances[7000]['client_hiv_status_date'] = array(
+  $instances[7100]['client_hiv_status_date'] = array(
     'field_name' => 'client_hiv_status_date',
     'type' => 'datetime',
     'label' => $t('Date of HIV Diagnosis'),
@@ -120,7 +120,7 @@ function _phok_client_installed_instances($update_number = NULL) {
     ),
   );
   // Proof of HIV Status file field
-  $instances[7000]['client_hiv_status_proof'] = array(
+  $instances[7100]['client_hiv_status_proof'] = array(
     'field_name' => 'client_hiv_status_proof',
     'type' => 'file',
     'label' => $t('Proof of HIV Status'),
@@ -134,5 +134,6 @@ function _phok_client_installed_instances($update_number = NULL) {
   if (is_int($update_number) && $update_number >= 7100) {
     $instances = $instances[$update_number];
   }
+  print_r($instances);
   return $instances;
 }
