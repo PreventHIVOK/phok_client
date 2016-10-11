@@ -2,16 +2,19 @@
 
 /**
  * @file
- * Module file for Node Example module.
- *
- * Part of the Examples for Developers project.
+ * Module file for PHOK Platform: Service Providers module.
  */
 
 /**
- * @defgroup phok_client Example: Node
- * @ingroup examples
+ * @defgroup phok_client PHOK: Service Providers
+ * @ingroup content
  * @{
  * Example defining a node type in code.
+ *
+ * This is an example outlining how a module can be used to define a new
+ * node type. Our example node type will allow users to specify multiple
+ * "colors", a "quantity" and an "image" for their nodes; some kind of
+ * rudimentary inventory-tracking system, perhaps?
  *
  * The basic pattern for defining a node type is to tell Drupal about the
  * node's fields and view modes. Drupal will then take over and manage
@@ -51,24 +54,29 @@
  * @see field_example.module
  */
 
+
 /**
  * Implements hook_node_info().
  *
  * We use hook_node_info() to define our node content type.
  */
 function phok_client_node_info() {
-  $node_types = array();
-  $node_types['phok_client'] = array(
-    'name' => t('Client'), // The human-readbale name
-    'base'        => 'phok_client', // The machine-name
-    'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
-    'help'        => t('This help text needs some work.'),
-    'has_title'   => TRUE, // Done not have a title field
-    'title_label' => t('Name'),
-    'locked' => TRUE, // Cannot change machine name
+  // We define the node type as an associative array.
+  return array(
+    'phok_client' => array(
+      'name' => t('Client'),
+      // 'base' tells Drupal the base string for hook functions.
+      // This is often the module name; if base is set to 'mymodule',
+      // Drupal would call mymodule_insert() or similar for node
+      // hooks. In our case, the base is 'phok_client'.
+      'base' => 'phok_client',
+      'description' => t('A <em>client</em> is an individual living with HIV who recieves services from the organization.'),
+      'title_label' => t('Client Name'),
+      // We'll set the 'locked' attribute to TRUE, so users won't be
+      // able to change the machine name of our content type.
+      'locked' => TRUE,
+    ),
   );
-
-  return $node_types;
 }
 
 /**
@@ -91,10 +99,10 @@ function phok_client_node_type_insert($content_type) {
     // node_add_body_field().
     // We'll set the body label now, although we could also set
     // it along with our other instance properties later.
-    $body_instance = node_add_body_field($content_type, t('Client Summary'));
+    $body_instance = node_add_body_field($content_type, t('Client Needs'));
 
     // Save our changes to the body field instance.
-    field_update_instance($body_instance);
+    //field_update_instance($body_instance);
 
     // Create all the fields we are adding to our content type.
     foreach (_phok_client_installed_fields() as $field) {
@@ -113,12 +121,61 @@ function phok_client_node_type_insert($content_type) {
 /**
  * Implements hook_form().
  *
- * Drupal needs for us to provide a form that lets the user add content.
- * You can get fancy with this form, or you can just punt and return the
- * default form that node_content will provide.
+ * Drupal needs for us to provide a form that lets the user
+ * add content. This is the form that the user will see if
+ * they go to node/add/node-example.
+ *
+ * You can get fancy with this form, or you can just punt
+ * and return the default form that node_content will provide.
  */
 function phok_client_form($node, $form_state) {
   return node_content_form($node, $form_state);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function phok_client_field_formatter_info() {
+  return array(
+    'phok_client_colors' => array(
+      'label' => t('Node Example Color Handle'),
+      'field types' => array('text'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @todo: We need to provide a formatter for the colors that a user is allowed
+ * to enter during node creation.
+ */
+function phok_client_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'phok_client_colors':
+      foreach ($items as $delta => $item) {
+        $element[$delta]['#type'] = 'markup';
+        $color = $item['safe_value'];
+        $element[$delta]['#markup'] = theme('example_node_color', array('color' => $color));
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * This lets us tell Drupal about our theme functions and their arguments.
+ */
+function phok_client_theme($existing, $type, $theme, $path) {
+  return array(
+    'example_node_color' => array(
+      'variables' => array('color' => NULL),
+    ),
+  );
 }
 
 /**
@@ -131,19 +188,26 @@ function phok_client_form($node, $form_state) {
  *   new node type.
  */
 function _phok_client_installed_fields() {
-  $installed_fields = array();
-  $installed_fields['client_hiv_date'] = array(
-    'field_name'  => 'client_hiv_date',
-    'cardinality' => 1,
-    'type'        => 'datetime',
+  return array(
+    'phok_client_color' => array(
+      'field_name' => 'phok_client_color',
+      'cardinality' => 3,
+      'type'        => 'text',
+      'settings'    => array(
+        'max_length' => 60,
+      ),
+    ),
+    'client_hiv_date' => array(
+      'field_name'  => 'client_hiv_date',
+      'cardinality' => 1,
+      'type'        => 'datetime',
+    ),
+    'client_hiv_proof' => array(
+      'field_name' => 'client_hiv_proof',
+      'type'       => 'file',
+      'cardinality' => 1,
+    ),
   );
-  $installed_fields['client_hiv_proof'] = array(
-    'field_name' => 'client_hiv_proof',
-    'cardinality' => 1,
-    'type'       => 'file',
-  );
-
-  return $installed_fields;
 }
 
 /**
@@ -162,17 +226,50 @@ function _phok_client_installed_fields() {
  *   node type.
  */
 function _phok_client_installed_instances() {
-  $installed_instances = array();
-  $installed_instances['client_hiv_date'] = array(
-    'field_name'  => 'client_hiv_date',
-    'label'       => t('Date of HIV+ Status'),
+  return array(
+    'phok_client_color' => array(
+      'field_name' => 'phok_client_color',
+      'label'       => t('The colors available for this object.'),
+      'widget'      => array(
+        'type'    => 'text_textfield',
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => 'hidden',
+          'type' => 'phok_client_colors',
+        ),
+      ),
+    ),
+    'client_hiv_date' => array(
+      'field_name'  => 'client_hiv_date',
+      'label' => t('Quantity required'),
+      'type'        => 'text',
+      'widget'      => array(
+        'type'    => 'datetime_select',
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => 'hidden',
+          'type' => 'hidden',
+        ),
+      ),
+    ),
+    'client_hiv_proof' => array(
+      'field_name'  => 'client_hiv_proof',
+      'label'       => t('Upload an image:'),
+      'required'    => FALSE,
+      'widget' => array(
+        'type'    => 'file_file',
+        'weight'  => 2.10,
+      ),
+      'display' => array(
+        'example_node_list' => array(
+          'label' => 'hidden',
+          'type' => 'file_link',
+        ),
+      ),
+    ),
   );
-  $installed_instances['client_hiv_proof'] = array(
-    'field_name'  => 'client_hiv_proof',
-    'label'       => t('Proof of HIV+ Status'),
-  );
-
-  return $installed_instances;
 }
 
 /**
