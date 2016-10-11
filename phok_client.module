@@ -200,7 +200,7 @@ function _phok_client_installed_instances() {
     'field_name'  => 'client_hiv_date',
     'label' => t('Date of HIV+ Status'),
   );
-  $installed_instances['client_hiv_proof' => array(
+  $installed_instances['client_hiv_proof' = array(
     'field_name'  => 'client_hiv_proof',
     'label'       => t('Proof of HIV+ Status'),
   );
