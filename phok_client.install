@@ -12,6 +12,7 @@ function phok_client_install() {
 
 function phok_client_update_7100(&$sandbox) {
   _phok_client_add_custom_fields(7100);
+  return t('Added the HIV Status Date and Proof of Positive fields.');
 }
 
 /*function phok_client_update_7101() {
