@@ -115,7 +115,7 @@ function phok_client_node_type_insert($content_type) {
     // Create all the instances for our fields.
     foreach (_phok_client_installed_instances() as $instance) {
       $instance['entity_type'] = 'node';
-      $instance['bundle'] = 'phok_client';
+      $instance['bundle'] = 'client';
       field_create_instance($instance);
     }
   }
@@ -177,12 +177,12 @@ function _phok_client_installed_fields() {
 function _phok_client_installed_instances() {
   return array(
     'client_positive_status_date' => array(
-      'field_name'  => 'client_positive_status_date',
+      'field_name'  => 'client_hiv_status_date',
       'label' => t('Date of HIV+ Status'),
-      'type'        => 'date',
+      'type'        => 'datetime',
     ),
     'client_positive_status_proof' => array(
-      'field_name'  => 'client_positive_status_proof',
+      'field_name'  => 'client_hiv_status_proof',
       'label'       => t('Proof of HIV+ Status'),
       'required'    => FALSE,
     ),
