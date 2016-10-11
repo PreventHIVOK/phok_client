@@ -57,35 +57,18 @@
  * We use hook_node_info() to define our node content type.
  */
 function phok_client_node_info() {
-  // We define the node type as an associative array.
-  return array(
-    'phok_client' => array(
-      'name' => t('Client'), // The human-readbale name
-      // 'base' tells Drupal the base string for hook functions.
-      // This is often the module name; if base is set to 'mymodule',
-      // Drupal would call mymodule_insert() or similar for node
-      // hooks. In our case, the base is 'phok_client'.
-      'base'        => 'phok_client', // The machine-name
-      'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
-      'help'        => t('This help text needs some work.'),
-      'has_title'   => FALSE, // Done not have a title field
-      //'title_label' => t('Name'),
-      'locked' => TRUE, // Cannot change machine name
-    ),
-    'client_appointment' => array(
-      'name' => t('Client: Appointment'), // The human-readbale name
-      // 'base' tells Drupal the base string for hook functions.
-      // This is often the module name; if base is set to 'mymodule',
-      // Drupal would call mymodule_insert() or similar for node
-      // hooks. In our case, the base is 'phok_client'.
-      'base'        => 'client_appointment', // The machine-name
-      'description' => t('An <em>appointment</em> is an in-person meeting.'),
-      'help'        => t('This help text needs some work.'),
-      'has_title'   => FALSE, // Does not have a title field
-      //'title_label' => t('Name'),
-      'locked' => TRUE, // Cannot change machine name
-    ),
+  $node_types = array();
+  $node_types['phok_client'] = array(
+    'name' => t('Client'), // The human-readbale name
+    'base'        => 'phok_client', // The machine-name
+    'description' => t('A <em>client</em> is a person living with HIV who is or has utilized services.'),
+    'help'        => t('This help text needs some work.'),
+    'has_title'   => TRUE, // Done not have a title field
+    'title_label' => t('Name'),
+    'locked' => TRUE, // Cannot change machine name
   );
+
+  return $node_types;
 }
 
 /**
@@ -146,17 +129,6 @@ function phok_client_form($node, $form_state) {
 }
 
 /**
- * Implements hook_form().
- *
- * Drupal needs for us to provide a form that lets the user add content.
- * You can get fancy with this form, or you can just punt and return the
- * default form that node_content will provide.
- */
-function client_appointment_form($node, $form_state) {
-  return node_content_form($node, $form_state);
-}
-
-/**
  * Define the fields for our content type.
  *
  * This big array is factored into this function for readability.
@@ -166,6 +138,7 @@ function client_appointment_form($node, $form_state) {
  *   new node type.
  */
 function _phok_client_installed_fields() {
+  $installed_fields = array();
   $installed_fields['client_hiv_date'] = array(
     'field_name'  => 'client_hiv_date',
     'cardinality' => 1,
@@ -196,14 +169,16 @@ function _phok_client_installed_fields() {
  *   node type.
  */
 function _phok_client_installed_instances() {
+  $installed_instances = array();
   $installed_instances['client_hiv_date'] = array(
     'field_name'  => 'client_hiv_date',
-    'label' => t('Date of HIV+ Status'),
+    'label'       => t('Date of HIV+ Status'),
   );
   $installed_instances['client_hiv_proof'] = array(
     'field_name'  => 'client_hiv_proof',
     'label'       => t('Proof of HIV+ Status'),
   );
+
   return $installed_instances;
 }
 
