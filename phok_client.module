@@ -166,18 +166,18 @@ function client_appointment_form($node, $form_state) {
  *   new node type.
  */
 function _phok_client_installed_fields() {
-  return array(
-    'client_hiv_date' => array(
-      'field_name'  => 'client_hiv_date',
-      'cardinality' => 1,
-      'type'        => 'datetime',
-    ),
-    'client_hiv_proof' => array(
-      'field_name' => 'client_hiv_proof',
-      'cardinality' => 1,
-      'type'       => 'file',
-    ),
+  $installed_fields['client_hiv_date'] = array(
+    'field_name'  => 'client_hiv_date',
+    'cardinality' => 1,
+    'type'        => 'datetime',
   );
+  $installed_fields['client_hiv_proof'] = array(
+    'field_name' => 'client_hiv_proof',
+    'cardinality' => 1,
+    'type'       => 'file',
+  );
+
+  return $installed_fields;
 }
 
 /**
@@ -196,21 +196,15 @@ function _phok_client_installed_fields() {
  *   node type.
  */
 function _phok_client_installed_instances() {
-  return array(
-    'client_hiv_date' => array(
-      'field_name'  => 'client_hiv_date',
-      'label' => t('Date of HIV+ Status'),
-      //'description' => t('Enter the date that the client was diagnosed as living with HIV.'),
-      //'type'        => 'select',
-      'required'    => FALSE,
-    ),
-    'client_hiv_proof' => array(
-      'field_name'  => 'client_hiv_proof',
-      'label'       => t('Proof of HIV+ Status'),
-      //'description' => t('Upload a scan or image of the document certifying that the client is living with HIV.'),
-      'required'    => FALSE,
-    ),
+  $installed_instances['client_hiv_date'] = array(
+    'field_name'  => 'client_hiv_date',
+    'label' => t('Date of HIV+ Status'),
   );
+  $installed_instances['client_hiv_proof' => array(
+    'field_name'  => 'client_hiv_proof',
+    'label'       => t('Proof of HIV+ Status'),
+  );
+  return $installed_instances;
 }
 
 /**
